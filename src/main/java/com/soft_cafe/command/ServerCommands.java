@@ -7,28 +7,11 @@ import com.soft_cafe.biome.BiomeMixinAccess;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 
-public class Commands {
-    public static int printDate(CommandContext<ServerCommandSource> serverCommandSourceCommandContext) throws CommandSyntaxException {
-        String timeString = Atmosphere.getCalendar().getTimeAsFormattedString();
-        String dateString = Atmosphere.getCalendar().getDateAsFormattedString();
-        String printString = timeString + "\n" + dateString;
-
-        serverCommandSourceCommandContext.getSource().getPlayer().sendMessage(new TranslatableText(printString), false);
-        return 1;
-    }
-
-
-    public static int printHemisphere(CommandContext<ServerCommandSource> serverCommandSourceCommandContext) throws CommandSyntaxException {
-        serverCommandSourceCommandContext.getSource().getPlayer().sendMessage(new TranslatableText(Atmosphere.getHemisphere()), false);
-        return 1;
-    }
-
-
+public class ServerCommands {
     public static int printTemperature(CommandContext<ServerCommandSource> serverCommandSourceCommandContext) throws CommandSyntaxException {
         Biome biome = null;
 
@@ -45,6 +28,20 @@ public class Commands {
         float maxTemp = ((BiomeMixinAccess) (Object) biome).getMaxTemperature();
 
         System.out.println(Float.toString(minTemp) + " - " + Float.toString(maxTemp));
+
+        return 1;
+    }
+
+    public static int setCalendarYear(int yearArg) throws CommandSyntaxException {
+        Atmosphere.getCalendar().setYear(yearArg);
+        Atmosphere.getCalendar().setDisplayYear(yearArg);
+
+        return 1;
+    }
+
+    public static int addCalendarYear(int yearArg) throws CommandSyntaxException {
+        Atmosphere.getCalendar().setYear(Atmosphere.getCalendar().getYear() + yearArg);
+        Atmosphere.getCalendar().setDisplayYear(Atmosphere.getCalendar().getDisplayYear() + yearArg);
 
         return 1;
     }

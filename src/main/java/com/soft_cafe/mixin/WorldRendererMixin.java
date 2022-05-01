@@ -29,13 +29,14 @@ public abstract class WorldRendererMixin {
 
     // Replace the Moon_Phases texture with our own various Moon textures
     private Identifier MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_7.png");
+    private Identifier SUN_TEXTURE = new Identifier("atmosphere:textures/environment/sun_clear.png");
     float moonSize = 5.f;
 
     // Access variables in WorldRenderer for customRenderSky
     private MinecraftClient client = ((WorldRendererAccessor) (Object) this).getClient();
     private ClientWorld world = ((WorldRendererAccessor) (Object) this).getWorld();
     private VertexBuffer lightSkyBuffer = ((WorldRendererAccessor) (Object) this).getLightSkyBuffer();
-    private static final Identifier SUN = WorldRendererAccessor.getSun();
+    //private static final Identifier SUN = WorldRendererAccessor.getSun();
     private VertexBuffer starsBuffer = ((WorldRendererAccessor) (Object) this).getStarsBuffer();
     private VertexBuffer darkSkyBuffer = ((WorldRendererAccessor) (Object) this).getDarkSkyBuffer();
 
@@ -67,8 +68,12 @@ public abstract class WorldRendererMixin {
             MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_10.png");
         } else if (phase == 14) {
             MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_11.png");
-        } else if (phase >= 15 && phase <= 17) {
-            MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_12.png");
+        } else if (phase >= 15 && phase <= 17) {    // Full moon
+            if (Atmosphere.getCalendar().getYear() % 37 == 0) {
+                MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_blood.png");
+            } else {
+                MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_12.png");
+            }
         } else if (phase == 18) {
             MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_13.png");
         } else if (phase == 19) {
@@ -188,7 +193,7 @@ public abstract class WorldRendererMixin {
         // Sun Texture
         k = 30.0f;
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderTexture(0, SUN);
+        RenderSystem.setShaderTexture(0, SUN_TEXTURE);
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
         bufferBuilder.vertex(matrix4f2, -k, 100.0f, -k).texture(0.0f, 0.0f).next();
         bufferBuilder.vertex(matrix4f2, k, 100.0f, -k).texture(1.0f, 0.0f).next();

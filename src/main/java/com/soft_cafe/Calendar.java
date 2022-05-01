@@ -20,7 +20,6 @@ public class Calendar {
     private int displayMonth = 1;
     private int displayYear = 1;
 
-
     private long adjustedTime = 0;
 
 

@@ -1,14 +1,14 @@
 package com.soft_cafe;
 
-import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.brigadier.CommandDispatcher;
 import com.soft_cafe.biome.BiomeMixinAccess;
-import com.soft_cafe.command.Commands;
+import com.soft_cafe.command.CommandsRegister;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
@@ -65,29 +65,48 @@ public class Atmosphere implements ModInitializer {
 
 		// Register TSC commands
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			CommandsRegister.registerTSCCommands(ClientCommandManager.DISPATCHER);
+			/*
+			// First part
 			LiteralCommandNode<ServerCommandSource> tscNode = CommandManager
 					.literal("tsc")
 					.build();
 
+			// Second Parts
 			LiteralCommandNode<ServerCommandSource> dateNode = CommandManager
 					.literal("date")
-					.executes(Commands::printDate)
+					.executes(CommandsRegister::printDate)
 					.build();
 
 			LiteralCommandNode<ServerCommandSource> hemisphereNode = CommandManager
 					.literal("hemisphere")
-					.executes(Commands::printHemisphere)
+					.executes(CommandsRegister::printHemisphere)
 					.build();
 
 			LiteralCommandNode<ServerCommandSource> temperatureNode = CommandManager
 					.literal("temperature")
-					.executes(Commands::printTemperature)
+					.executes(CommandsRegister::printTemperature)
+					.build();
+
+			// Alter Calendar Date
+			LiteralCommandNode<ServerCommandSource> calendarNode = CommandManager
+					.literal("calendar")
+					.build();
+			LiteralCommandNode<ServerCommandSource> yearAddNode = CommandManager
+					.literal("year_set")
+					.then(CommandManager.argument("year", IntegerArgumentType.integer()))
+					.executes(CommandsRegister.setCalendarYear(context, 2))
 					.build();
 
 			dispatcher.getRoot().addChild(tscNode);
 			tscNode.addChild(dateNode);
 			tscNode.addChild(hemisphereNode);
 			tscNode.addChild(temperatureNode);
+			// Alter Calendar Date
+			tscNode.addChild(calendarNode);
+			//calendarNode.addChild(yearAddNode);
+
+			*/
 		});
 
 		// Hook into the world tick
