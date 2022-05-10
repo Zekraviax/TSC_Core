@@ -18,25 +18,31 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
     private final boolean renderDefaultStars = true;
+    private float sunSize = 30.f;
+    private float moonSize = 5.f;
+    private float starSize = 100.f;
 
     // Replace the Moon_Phases texture with our own various Moon textures
     private Identifier MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_7.png");
     private Identifier SUN_TEXTURE = new Identifier("atmosphere:textures/environment/sun_clear.png");
-    float moonSize = 5.f;
+    private Identifier STARS_BOTTOM_TEXTURE = new Identifier("atmosphere:textures/environment/stars_down.png");
+    private Identifier STARS_TOP_TEXTURE = new Identifier("atmosphere:textures/environment/stars_up.png");
+    private Identifier STARS_FRONT_TEXTURE = new Identifier("atmosphere:textures/environment/stars_north.png");
+    private Identifier STARS_BACK_TEXTURE = new Identifier("atmosphere:textures/environment/stars_south.png");
+    private Identifier STARS_LEFT_TEXTURE = new Identifier("atmosphere:textures/environment/stars_west.png");
+    private Identifier STARS_RIGHT_TEXTURE = new Identifier("atmosphere:textures/environment/stars_east.png");
 
-    // Access variables in WorldRenderer for customRenderSky
+    // Access variables in WorldRenderer for our customRenderSky method
     private MinecraftClient client = ((WorldRendererAccessor) (Object) this).getClient();
     private ClientWorld world = ((WorldRendererAccessor) (Object) this).getWorld();
     private VertexBuffer lightSkyBuffer = ((WorldRendererAccessor) (Object) this).getLightSkyBuffer();
-    //private static final Identifier SUN = WorldRendererAccessor.getSun();
     private VertexBuffer starsBuffer = ((WorldRendererAccessor) (Object) this).getStarsBuffer();
     private VertexBuffer darkSkyBuffer = ((WorldRendererAccessor) (Object) this).getDarkSkyBuffer();
 
@@ -195,7 +201,7 @@ public abstract class WorldRendererMixin {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SUN_TEXTURE);
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrix4f2, -k, 100.0f, -k).texture(0.0f, 0.0f).next();
+        bufferBuilder.vertex(matrix4f2, -sunSize, 100.0f, -k).texture(0.0f, 0.0f).next();
         bufferBuilder.vertex(matrix4f2, k, 100.0f, -k).texture(1.0f, 0.0f).next();
         bufferBuilder.vertex(matrix4f2, k, 100.0f, k).texture(1.0f, 1.0f).next();
         bufferBuilder.vertex(matrix4f2, -k, 100.0f, k).texture(0.0f, 1.0f).next();
@@ -214,9 +220,60 @@ public abstract class WorldRendererMixin {
         bufferBuilder.vertex(matrix4f2, -moonSize, -100.0f, -moonSize).texture(0.f, 1.f).next();
         bufferBuilder.end();
         BufferRenderer.draw(bufferBuilder);
+
+        // Custom Stars textures
+        // loop = 0 = Bottom
+        // 1 = East
+        // 2 = Up
+        // 3 = West
+        // 4 = South
+        // 5 = North
+        for (int loop = 0; loop <= 5; loop++) {
+            switch(loop)
+            {
+                case(0):
+                    RenderSystem.setShaderTexture(0, STARS_BOTTOM_TEXTURE);
+                    matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-90.f));
+                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.f));
+                    break;
+                case(1):
+                    RenderSystem.setShaderTexture(0, STARS_RIGHT_TEXTURE);
+                    matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.f));
+                    break;
+                case(2):
+                    RenderSystem.setShaderTexture(0, STARS_TOP_TEXTURE);
+                    matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.f));
+                    break;
+                case(3):
+                    RenderSystem.setShaderTexture(0, STARS_LEFT_TEXTURE);
+                    matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.f));
+                    break;
+                case(4):
+                    RenderSystem.setShaderTexture(0, STARS_BACK_TEXTURE);
+                    matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.f));
+                    matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.f));
+                    break;
+                case(5):
+                    RenderSystem.setShaderTexture(0, STARS_FRONT_TEXTURE);
+                    matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.f));
+                    break;
+                default:
+                    break;
+            }
+
+
+            bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
+            bufferBuilder.vertex(matrix4f2, -starSize, -100.0f, starSize).texture(0.f, 0.f).next();
+            bufferBuilder.vertex(matrix4f2, starSize, -100.0f, starSize).texture(0.f, 1.f).next();
+            bufferBuilder.vertex(matrix4f2, starSize, -100.0f, -starSize).texture(1.f, 1.f).next();
+            bufferBuilder.vertex(matrix4f2, -starSize, -100.0f, -starSize).texture(1.f, 0.f).next();
+            bufferBuilder.end();
+            BufferRenderer.draw(bufferBuilder);
+        }
+
         RenderSystem.disableTexture();
 
-        // Stars?
+        // Default Stars?
         if (renderDefaultStars == true) {
             float u = this.world.method_23787(tickDelta) * i;
             if (u > 0.0f) {

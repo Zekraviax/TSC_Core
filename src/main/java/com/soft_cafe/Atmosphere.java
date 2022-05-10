@@ -65,7 +65,9 @@ public class Atmosphere implements ModInitializer {
 
 		// Register TSC commands
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-			CommandsRegister.registerTSCCommands(ClientCommandManager.DISPATCHER);
+			//CommandsRegister.registerTSCClientCommands(ClientCommandManager.DISPATCHER);
+
+
 			/*
 			// First part
 			LiteralCommandNode<ServerCommandSource> tscNode = CommandManager

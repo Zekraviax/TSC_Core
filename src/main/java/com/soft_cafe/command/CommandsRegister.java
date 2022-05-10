@@ -19,7 +19,7 @@ import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 
 public class CommandsRegister {
-    public static void registerTSCCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
+    public static void registerTSCClientCommands(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(LiteralArgumentBuilder.<FabricClientCommandSource>literal("tsc")
             .then(LiteralArgumentBuilder.literal("year"))
                 .then(LiteralArgumentBuilder.literal("set"))
@@ -32,5 +32,9 @@ public class CommandsRegister {
                         .executes(ctx -> {
                             return ServerCommands.addCalendarYear(ctx.getArgument("year", Integer.class));
                         })));
+    }
+
+    public void registerSetYear() {
+
     }
 }
