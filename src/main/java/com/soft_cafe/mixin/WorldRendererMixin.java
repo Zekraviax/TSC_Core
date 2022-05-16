@@ -32,12 +32,12 @@ public abstract class WorldRendererMixin {
     // Replace the Moon_Phases texture with our own various Moon textures
     private Identifier MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_7.png");
     private Identifier SUN_TEXTURE = new Identifier("atmosphere:textures/environment/sun_clear.png");
-    private Identifier STARS_BOTTOM_TEXTURE = new Identifier("atmosphere:textures/environment/stars_down.png");
-    private Identifier STARS_TOP_TEXTURE = new Identifier("atmosphere:textures/environment/stars_up.png");
-    private Identifier STARS_FRONT_TEXTURE = new Identifier("atmosphere:textures/environment/stars_north.png");
-    private Identifier STARS_BACK_TEXTURE = new Identifier("atmosphere:textures/environment/stars_south.png");
-    private Identifier STARS_LEFT_TEXTURE = new Identifier("atmosphere:textures/environment/stars_west.png");
-    private Identifier STARS_RIGHT_TEXTURE = new Identifier("atmosphere:textures/environment/stars_east.png");
+    private Identifier STARS_BOTTOM_TEXTURE = new Identifier("atmosphere:textures/environment/down.png");
+    private Identifier STARS_TOP_TEXTURE = new Identifier("atmosphere:textures/environment/up.png");
+    private Identifier STARS_FRONT_TEXTURE = new Identifier("atmosphere:textures/environment/north.png");
+    private Identifier STARS_BACK_TEXTURE = new Identifier("atmosphere:textures/environment/south.png");
+    private Identifier STARS_LEFT_TEXTURE = new Identifier("atmosphere:textures/environment/west.png");
+    private Identifier STARS_RIGHT_TEXTURE = new Identifier("atmosphere:textures/environment/east.png");
 
     // Access variables in WorldRenderer for our customRenderSky method
     private MinecraftClient client = ((WorldRendererAccessor) (Object) this).getClient();
@@ -303,39 +303,4 @@ public abstract class WorldRendererMixin {
         RenderSystem.enableTexture();
         RenderSystem.depthMask(true);
     }
-
-
-    /*
-    @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiply(Lnet/minecraft/util/math/Quaternion;)V"), method = "renderSky", cancellable = true)
-    private static void renderSkyHook(MatrixStack matrixStack, float f, CallbackInfo ci) {
-        ci.cancel();
-    }
-    */
-
-
-
-    /*
-    @Redirect(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V",
-            at = @At(value = "INVOKE",
-                    target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/util/Identifier;)V"))
-    slice = @Slice(
-                    from = @At(value = "INVOKE", target = "net/minecraft/client/render/BufferBuilder.vertex (Lnet/minecraft/util/math/Matrix4f;FFF)Lnet/minecraft/client/render/VertexConsumer;"),
-                    to = @At(value = "INVOKE", target = "net/minecraft/client/render/BufferBuilder.begin (Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V")
-            )
-
-    @Redirect(slice = @Slice(
-            from = @At(value = "INVOKE", target = "net/minecraft/client/render/BufferBuilder.vertex (Lnet/minecraft/util/math/Matrix4f;FFF)Lnet/minecraft/client/render/VertexConsumer;"),
-            to = @At(value = "INVOKE", target = "net/minecraft/client/render/BufferBuilder.begin (Lnet/minecraft/client/render/VertexFormat$DrawMode;Lnet/minecraft/client/render/VertexFormat;)V")),
-            at = @At(value = "INVOKE"))
-     */
-
-
-    /*
-    @ModifyArg(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V",
-                at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderTexture(ILnet/minecraft/util/Identifier;)V"),
-                index = 1)
-    public Identifier modifyMoonPhaseIdentifier(Identifier identifier) {
-        return STARS;
-    }
-    */
 }
