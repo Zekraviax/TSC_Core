@@ -32,12 +32,12 @@ public abstract class WorldRendererMixin {
     // Replace the Moon_Phases texture with our own various Moon textures
     private Identifier MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_7.png");
     private Identifier SUN_TEXTURE = new Identifier("atmosphere:textures/environment/sun_clear.png");
-    private Identifier STARS_BOTTOM_TEXTURE = new Identifier("atmosphere:textures/environment/down.png");
-    private Identifier STARS_TOP_TEXTURE = new Identifier("atmosphere:textures/environment/up.png");
+    private Identifier STARS_BOTTOM_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_down.png");
+    private Identifier STARS_TOP_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_up.png");
     private Identifier STARS_FRONT_TEXTURE = new Identifier("atmosphere:textures/environment/north.png");
     private Identifier STARS_BACK_TEXTURE = new Identifier("atmosphere:textures/environment/south.png");
-    private Identifier STARS_LEFT_TEXTURE = new Identifier("atmosphere:textures/environment/west.png");
-    private Identifier STARS_RIGHT_TEXTURE = new Identifier("atmosphere:textures/environment/east.png");
+    private Identifier STARS_LEFT_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_west.png");
+    private Identifier STARS_RIGHT_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_east.png");
 
     // Access variables in WorldRenderer for our customRenderSky method
     private MinecraftClient client = ((WorldRendererAccessor) (Object) this).getClient();
@@ -190,6 +190,7 @@ public abstract class WorldRendererMixin {
         RenderSystem.enableTexture();
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
         matrices.push();
+
         i = 1.0f - this.world.getRainGradient(tickDelta);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, i);
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0f));
@@ -220,6 +221,53 @@ public abstract class WorldRendererMixin {
         bufferBuilder.vertex(matrix4f2, -moonSize, -100.0f, -moonSize).texture(0.f, 1.f).next();
         bufferBuilder.end();
         BufferRenderer.draw(bufferBuilder);
+
+        // Stars
+        renderStars(matrices, tickDelta, bufferBuilder);
+        RenderSystem.disableTexture();
+
+        // Default Stars?
+        if (renderDefaultStars == true) {
+            float u = this.world.method_23787(tickDelta) * i;
+            if (u > 0.0f) {
+                RenderSystem.setShaderColor(u, u, u, u);
+                BackgroundRenderer.clearFog();
+                this.starsBuffer.setShader(matrices.peek().getPositionMatrix(), projectionMatrix, GameRenderer.getPositionShader());
+                runnable.run();
+            }
+        }
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        RenderSystem.disableBlend();
+        matrices.pop();
+        RenderSystem.disableTexture();
+        RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0f);
+        double d = this.client.player.getCameraPosVec((float)tickDelta).y - this.world.getLevelProperties().getSkyDarknessHeight(this.world);
+        if (d < 0.0) {
+            matrices.push();
+            matrices.translate(0.0, 12.0, 0.0);
+            this.darkSkyBuffer.setShader(matrices.peek().getPositionMatrix(), projectionMatrix, shader);
+            matrices.pop();
+        }
+        if (this.world.getDimensionEffects().isAlternateSkyColor()) {
+            RenderSystem.setShaderColor(f * 0.2f + 0.04f, g * 0.2f + 0.04f, h * 0.6f + 0.1f, 1.0f);
+        } else {
+            RenderSystem.setShaderColor(f, g, h, 1.0f);
+        }
+        RenderSystem.enableTexture();
+        RenderSystem.depthMask(true);
+    }
+
+
+    void renderStars(MatrixStack matrices, float tickDelta, BufferBuilder bufferBuilder) {
+        float i = 1.0f - this.world.getRainGradient(tickDelta);
+
+        //MatrixStack matrices2 = new MatrixStack();
+
+        // Rotation speed and direction
+        matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(this.world.getSkyAngle(tickDelta) * 360.0f));
+        matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(this.world.getSkyAngle(tickDelta) * 360.0f));
+
+        Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
 
         // Custom Stars textures
         // loop = 0 = Bottom
@@ -261,7 +309,6 @@ public abstract class WorldRendererMixin {
                     break;
             }
 
-
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
             bufferBuilder.vertex(matrix4f2, -starSize, -100.0f, starSize).texture(0.f, 0.f).next();
             bufferBuilder.vertex(matrix4f2, starSize, -100.0f, starSize).texture(0.f, 1.f).next();
@@ -272,35 +319,5 @@ public abstract class WorldRendererMixin {
         }
 
         RenderSystem.disableTexture();
-
-        // Default Stars?
-        if (renderDefaultStars == true) {
-            float u = this.world.method_23787(tickDelta) * i;
-            if (u > 0.0f) {
-                RenderSystem.setShaderColor(u, u, u, u);
-                BackgroundRenderer.clearFog();
-                this.starsBuffer.setShader(matrices.peek().getPositionMatrix(), projectionMatrix, GameRenderer.getPositionShader());
-                runnable.run();
-            }
-        }
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.disableBlend();
-        matrices.pop();
-        RenderSystem.disableTexture();
-        RenderSystem.setShaderColor(0.0f, 0.0f, 0.0f, 1.0f);
-        double d = this.client.player.getCameraPosVec((float)tickDelta).y - this.world.getLevelProperties().getSkyDarknessHeight(this.world);
-        if (d < 0.0) {
-            matrices.push();
-            matrices.translate(0.0, 12.0, 0.0);
-            this.darkSkyBuffer.setShader(matrices.peek().getPositionMatrix(), projectionMatrix, shader);
-            matrices.pop();
-        }
-        if (this.world.getDimensionEffects().isAlternateSkyColor()) {
-            RenderSystem.setShaderColor(f * 0.2f + 0.04f, g * 0.2f + 0.04f, h * 0.6f + 0.1f, 1.0f);
-        } else {
-            RenderSystem.setShaderColor(f, g, h, 1.0f);
-        }
-        RenderSystem.enableTexture();
-        RenderSystem.depthMask(true);
     }
 }
