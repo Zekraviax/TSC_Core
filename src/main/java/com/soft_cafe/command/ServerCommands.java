@@ -2,7 +2,7 @@ package com.soft_cafe.command;
 
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.soft_cafe.Atmosphere;
+import com.soft_cafe.TSC_Core;
 import com.soft_cafe.biome.BiomeMixinAccess;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -33,15 +33,15 @@ public class ServerCommands {
     }
 
     public static int setCalendarYear(int yearArg) throws CommandSyntaxException {
-        Atmosphere.getCalendar().setYear(yearArg);
-        Atmosphere.getCalendar().setDisplayYear(yearArg);
+        TSC_Core.getCalendar().setYear(yearArg);
+        TSC_Core.getCalendar().setDisplayYear(yearArg);
 
         return 1;
     }
 
     public static int addCalendarYear(int yearArg) throws CommandSyntaxException {
-        Atmosphere.getCalendar().setYear(Atmosphere.getCalendar().getYear() + yearArg);
-        Atmosphere.getCalendar().setDisplayYear(Atmosphere.getCalendar().getDisplayYear() + yearArg);
+        TSC_Core.getCalendar().setYear(TSC_Core.getCalendar().getYear() + yearArg);
+        TSC_Core.getCalendar().setDisplayYear(TSC_Core.getCalendar().getDisplayYear() + yearArg);
 
         return 1;
     }

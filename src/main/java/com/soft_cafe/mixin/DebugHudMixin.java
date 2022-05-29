@@ -1,6 +1,6 @@
 package com.soft_cafe.mixin;
 
-import com.soft_cafe.Atmosphere;
+import com.soft_cafe.TSC_Core;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.DebugHud;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,10 +21,10 @@ public abstract class DebugHudMixin {
         // Current hemispheres
         if (client.player != null) {
             returnStrings.add("");
-            returnStrings.add("Hemispheres: " + Atmosphere.getHemisphere());
+            returnStrings.add("Hemispheres: " + TSC_Core.getHemisphere());
         }
 
-        String minuteAsString = Integer.toString(Atmosphere.getCalendar().getMinute());
+        String minuteAsString = Integer.toString(TSC_Core.getCalendar().getMinute());
         if (minuteAsString.length() < 2) {
             minuteAsString = "0" + minuteAsString;
         }
@@ -33,13 +33,12 @@ public abstract class DebugHudMixin {
         returnStrings.add("");
         returnStrings.add("Time and Date:");
 
-        returnStrings.add(Atmosphere.getCalendar().getHour() + ":" + minuteAsString + " " + Atmosphere.getCalendar().getMeridian());
-        returnStrings.add(Atmosphere.getCalendar().getDayAsString());
-        returnStrings.add(Atmosphere.getCalendar().getMonth() + " " + Atmosphere.getCalendar().getDisplayDay());
-        returnStrings.add("Year " + Integer.toString(Atmosphere.getCalendar().getDisplayYear()));
+        returnStrings.add(TSC_Core.getCalendar().getHour() + ":" + minuteAsString + " " + TSC_Core.getCalendar().getMeridian());
+        returnStrings.add(TSC_Core.getCalendar().getDayAsString());
+        returnStrings.add(TSC_Core.getCalendar().getMonth() + " " + TSC_Core.getCalendar().getDisplayDay());
+        returnStrings.add("Year " + Integer.toString(TSC_Core.getCalendar().getDisplayYear()));
 
         rightText.setReturnValue(returnStrings);
-
 
         // Get game time in ticks
         returnStrings.add("");

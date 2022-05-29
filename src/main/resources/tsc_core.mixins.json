@@ -12,6 +12,9 @@
   "client": [
     "DebugHudMixin"
   ],
+  "server": [
+    "PlayerManagerMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

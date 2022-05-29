@@ -2,7 +2,7 @@ package com.soft_cafe.mixin;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.soft_cafe.Atmosphere;
+import com.soft_cafe.TSC_Core;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
@@ -48,7 +48,7 @@ public abstract class WorldRendererMixin {
 
     // Custom moon phases
     void returnAtmosphereMoonPhase(long time) {
-        int phase = (Atmosphere.getCalendar().getDay() % 30);
+        int phase = (TSC_Core.getCalendar().getDay() % 30);
 
         if (phase >= 0 && phase <= 2) {
             MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_0.png");
@@ -75,7 +75,7 @@ public abstract class WorldRendererMixin {
         } else if (phase == 14) {
             MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_11.png");
         } else if (phase >= 15 && phase <= 17) {    // Full moon
-            if (Atmosphere.getCalendar().getYear() % 37 == 0) {
+            if (TSC_Core.getCalendar().getYear() % 37 == 0) {
                 MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_blood.png");
             } else {
                 MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_12.png");
@@ -104,6 +104,7 @@ public abstract class WorldRendererMixin {
             MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_23.png");
         }
     }
+
 
     /**
      * @author Soft Cafe
@@ -263,9 +264,10 @@ public abstract class WorldRendererMixin {
 
         //MatrixStack matrices2 = new MatrixStack();
 
-        // Rotation speed and direction
+        // First multiply cancels out the rotation from the sun and moon
+        // Second multiply dictates rotation speed and direction for the stars
         matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(this.world.getSkyAngle(tickDelta) * 360.0f));
-        matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(this.world.getSkyAngle(tickDelta) * 360.0f));
+        matrices.multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(TSC_Core.getCalendar().getConstellationsAngle()));
 
         Matrix4f matrix4f2 = matrices.peek().getPositionMatrix();
 
@@ -285,7 +287,7 @@ public abstract class WorldRendererMixin {
                     matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.f));
                     break;
                 case(1):
-                    RenderSystem.setShaderTexture(0, STARS_RIGHT_TEXTURE);
+                    RenderSystem.setShaderTexture(0, STARS_LEFT_TEXTURE);
                     matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.f));
                     break;
                 case(2):
@@ -293,7 +295,7 @@ public abstract class WorldRendererMixin {
                     matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.f));
                     break;
                 case(3):
-                    RenderSystem.setShaderTexture(0, STARS_LEFT_TEXTURE);
+                    RenderSystem.setShaderTexture(0, STARS_RIGHT_TEXTURE);
                     matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-90.f));
                     break;
                 case(4):

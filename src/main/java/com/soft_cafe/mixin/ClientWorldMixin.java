@@ -1,6 +1,6 @@
 package com.soft_cafe.mixin;
 
-import com.soft_cafe.Atmosphere;
+import com.soft_cafe.TSC_Core;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.registry.RegistryEntry;
@@ -30,17 +30,17 @@ public abstract class ClientWorldMixin extends World {
         if (properties != null) {
             adjustedTime = (getTimeOfDay() + 6000) % 24000;
 
-            if (Atmosphere.getCalendar().getDay() != (int) Math.floor((getTimeOfDay() / 24000)) + 1) {
-                Atmosphere.getCalendar().newDay();
+            if (TSC_Core.getCalendar().getDay() != (int) Math.floor((getTimeOfDay() / 24000)) + 1) {
+                TSC_Core.getCalendar().newDay();
             }
 
-            if (Atmosphere.getCalendar().getDisplayDay() >= 28) {
-                Atmosphere.getCalendar().newMonth();
+            if (TSC_Core.getCalendar().getDisplayDay() >= 28) {
+                TSC_Core.getCalendar().newMonth();
             }
 
-            Atmosphere.getCalendar().setMinute((int) Math.floor((adjustedTime % 1000) / 16.667));
-            Atmosphere.getCalendar().setHour((int) Math.floor((adjustedTime / 1000)));
-            Atmosphere.getCalendar().setDay((int) Math.floor((getTimeOfDay() / 24000)) + 1);
+            TSC_Core.getCalendar().setMinute((int) Math.floor((adjustedTime % 1000) / 16.667));
+            TSC_Core.getCalendar().setHour((int) Math.floor((adjustedTime / 1000)));
+            TSC_Core.getCalendar().setDay((int) Math.floor((getTimeOfDay() / 24000)) + 1);
         }
     }
 }

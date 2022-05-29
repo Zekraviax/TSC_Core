@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Biome.class)
-public abstract class BiomeMixin implements BiomeMixinAccess, NewMonthCallback {
+public abstract class BiomeMixin implements BiomeMixinAccess {
     @Unique
     private String biomeName = "null";
 

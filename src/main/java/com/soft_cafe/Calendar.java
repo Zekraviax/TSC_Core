@@ -15,12 +15,13 @@ public class Calendar {
     private int day = 1;
     private String dayAsString = "Monday";
 
+    private int dayOfYear = 1;
+    private int constellationsAngle = 180;
+
     //
     private int displayDay = 1;
     private int displayMonth = 1;
     private int displayYear = 1;
-
-    private long adjustedTime = 0;
 
 
     // Getters and setters
@@ -62,9 +63,7 @@ public class Calendar {
         this.month = month;
     }
 
-    public int getDay() {
-        return day;
-    }
+    public int getDay() { return day; }
 
     public void setDay(int day) {
         this.day = day;
@@ -100,18 +99,18 @@ public class Calendar {
         this.displayYear = displayYear;
     }
 
+    public int getConstellationsAngle() {
+        return constellationsAngle;
+    }
 
-    public void newHour() {
-        if (hour >= 12 && hour < 24) {
-            meridian = "PM";
-        } else {
-            meridian = "AM";
-        }
+    public void setConstellationsAngle(int constellationsAngle) {
+        this.constellationsAngle = constellationsAngle;
     }
 
 
     public void newDay() {
         displayDay++;
+        dayOfYear++;
 
         switch(dayAsString) {
             case("Monday"):
@@ -136,6 +135,17 @@ public class Calendar {
                 dayAsString = "Monday";
                 break;
         }
+
+        // Set position of constellations
+        // Each constellation lasts 30 days, except Sagittarius, Pisces, Taurus, Aquarius and Gemini which last 31 days
+        if (dayOfYear != 64 && dayOfYear != 124 && dayOfYear != 155 && dayOfYear != 340) {
+            constellationsAngle--;
+        }
+
+        if (constellationsAngle > 360)
+            constellationsAngle -= 360;
+        if (constellationsAngle < 0)
+            constellationsAngle += 360;
     }
 
 
@@ -146,7 +156,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "February";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("February"):
@@ -154,7 +164,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "March";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("March"):
@@ -162,7 +172,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "April";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("April"):
@@ -170,7 +180,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "May";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("May"):
@@ -178,7 +188,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "June";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("June"):
@@ -186,7 +196,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "July";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("July"):
@@ -194,7 +204,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "August";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("August"):
@@ -202,7 +212,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "September";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("September"):
@@ -210,7 +220,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "October";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("October"):
@@ -218,7 +228,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "November";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("November"):
@@ -226,7 +236,7 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "December";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
                 }
                 break;
             case ("December"):
@@ -234,11 +244,12 @@ public class Calendar {
                     displayDay = 1;
                     displayMonth++;
                     month = "January";
-                    Atmosphere.newMonthEvent();
+                    TSC_Core.newMonthEvent();
 
+                    dayOfYear = 1;
                     displayYear++;
                     year++;
-                    Atmosphere.LOGGER.info("New year!");
+                    TSC_Core.LOGGER.info("New year!");
                 }
                 break;
             default:

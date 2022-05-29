@@ -1,11 +1,11 @@
 package com.soft_cafe.biome;
 
-import com.soft_cafe.Atmosphere;
+import com.soft_cafe.TSC_Core;
 import net.minecraft.world.biome.Biome;
 
 public class BiomeTemperatureRangesLookup {
     public static void LookUp(String biomeName, Biome biome) {
-        int monthNumber = Atmosphere.getCalendar().getDisplayMonth();
+        int monthNumber = TSC_Core.getCalendar().getDisplayMonth();
 
         switch(biomeName)
         {

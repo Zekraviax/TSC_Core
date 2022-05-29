@@ -1,11 +1,7 @@
 package com.soft_cafe;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.soft_cafe.biome.BiomeMixinAccess;
-import com.soft_cafe.command.CommandsRegister;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
@@ -19,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class Atmosphere implements ModInitializer {
-	public static final String MODID = "Atmosphere";
+public class TSC_Core implements ModInitializer {
+	public static final String MODID = "TSC_Core";
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
@@ -42,7 +38,7 @@ public class Atmosphere implements ModInitializer {
 	}
 
 	public static void setCalendar(Calendar calendar) {
-		Atmosphere.calendar = calendar;
+		TSC_Core.calendar = calendar;
 	}
 
 	public static MinecraftClient getClient() {
@@ -50,7 +46,7 @@ public class Atmosphere implements ModInitializer {
 	}
 
 	public static void setClient(MinecraftClient client) {
-		Atmosphere.client = client;
+		TSC_Core.client = client;
 	}
 
 
@@ -66,7 +62,6 @@ public class Atmosphere implements ModInitializer {
 		// Register TSC commands
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 			//CommandsRegister.registerTSCClientCommands(ClientCommandManager.DISPATCHER);
-
 
 			/*
 			// First part
@@ -142,7 +137,7 @@ public class Atmosphere implements ModInitializer {
 			hemisphereString += "Equator";
 		}
 
-		hemisphereString += "\nEast/West: ";
+		hemisphereString += "East/West: ";
 
 		// Check X value for E/W hemisphere
 		if (client.player.getBlockPos().getX() > 0) {

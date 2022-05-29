@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "atmosphere",
+  "id": "tsc_core",
   "version": "1.0",
 
-  "name": "Atmosphere!",
+  "name": "TSC_Core!",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -19,11 +19,11 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.soft_cafe.Atmosphere"
+      "com.soft_cafe.TSC_Core"
     ]
   },
   "mixins": [
-    "atmosphere.mixins.json"
+    "tsc_core.mixins.json"
   ],
 
   "depends": {
@@ -36,5 +36,5 @@
     "another-mod": "*"
   },
 
-  "accessWidener": "Atmosphere.accesswidener"
+  "accessWidener": "tsc_core.accesswidener"
 }

@@ -39,47 +39,6 @@ public interface WorldRendererAccessor {
     @Accessor("darkSkyBuffer")
     VertexBuffer getDarkSkyBuffer();
 
-    /*
-    @Accessor("ticks")
-    int getTicks();
-
-    @Accessor("lastCloudsBlockX")
-    static int getLastCloudsBlockX() {
-        throw new AssertionError();
-    }
-
-    @Accessor("lastCloudsBlockY")
-    static int getLastCloudsBlockY() {
-        throw new AssertionError();
-    }
-
-    @Accessor("lastCloudsBlockZ")
-    static int getLastCloudsBlockZ() {
-        throw new AssertionError();
-    }
-
-    @Accessor("lastCloudsColor")
-    static Vec3d getLastCloudsColor() {
-        throw new AssertionError();
-    }
-
-    @Accessor("lastCloudsRenderMode")
-    static CloudRenderMode getLastCloudsRenderMode() {
-        throw new AssertionError();
-    }
-
-    @Accessor("cloudsDirty")
-    static boolean getCloudsDirty() {
-        throw new AssertionError();
-    }
-
-    @Accessor("cloudsBuffer")
-    static VertexBuffer getCloudsBuffer() {
-        throw new AssertionError();
-    }
-    */
-
-
     @Invoker("renderEndSky")
     void invokeRenderEndSky(MatrixStack matrices);
 }
