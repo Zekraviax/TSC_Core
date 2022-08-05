@@ -8,8 +8,7 @@
     "ClientWorldMixin",
     "WorldRendererMixin",
     "WorldRendererAccessor",
-    "PlayerManagerMixin",
-    "PlayerEntityMixin"
+    "PlayerManagerMixin"
   ],
   "client": [
     "DebugHudMixin"

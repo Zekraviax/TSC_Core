@@ -3,9 +3,14 @@ package com.soft_cafe;
 import com.soft_cafe.biome.BiomeMixinAccess;
 import com.soft_cafe.command.CommandsRegister;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
@@ -16,22 +21,23 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class TSC_Core implements ModInitializer {
-	public static final String MODID = "TSC_Core";
+	public static final String MODID = "tsc_core";
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
+	// Always accessible variables
 	private static Calendar calendar;
 	private static MinecraftClient client;
 
-	private NbtCompound savedCompound;
-
 	// New Month event listeners
 	private static Collection<Biome> listeners = new HashSet<>();
-
 	private static boolean firstTimeSetupCheck = true;
+
+	// Items
+	public static final Item BIRTHDAY_CERTIFICATE = new Item(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1));
 
 
 	// Getters and setters
@@ -51,14 +57,6 @@ public class TSC_Core implements ModInitializer {
 		TSC_Core.client = client;
 	}
 
-	public NbtCompound getSavedCompound() {
-		return savedCompound;
-	}
-
-	public void setSavedCompound(NbtCompound savedCompound) {
-		this.savedCompound = savedCompound;
-	}
-
 
 	@Override
 	public void onInitialize() {
@@ -70,12 +68,15 @@ public class TSC_Core implements ModInitializer {
 		client = MinecraftClient.getInstance();
 		calendar = new Calendar();
 
-		// Register TSC commands
-		CommandsRegister.registerTscClientCommands();
-
 		for (RegistryEntry<Biome> biome : MultiNoiseBiomeSource.Preset.OVERWORLD.getBiomeSource(BuiltinRegistries.BIOME).getBiomes()) {
 			listeners.add(biome.value());
 		}
+
+		// Register TSC commands
+		CommandsRegister.registerTscClientCommands();
+
+		// Register items
+		Registry.register(Registry.ITEM, new Identifier(MODID, "birthday_certificate"), BIRTHDAY_CERTIFICATE);
 	}
 
 

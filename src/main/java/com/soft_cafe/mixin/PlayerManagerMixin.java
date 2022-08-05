@@ -30,6 +30,8 @@ abstract public class PlayerManagerMixin {
         // Get birthday data.
         localNbtCompound.putInt("BirthDayOfMonth", TSC_Core.getCalendar().getDay());
 
+        localNbtCompound.putBoolean("hasSetBirthday", false);
+
         if (localNbtCompound != null) {
             player.writeCustomDataToNbt(localNbtCompound);
         } else {

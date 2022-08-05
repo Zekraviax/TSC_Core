@@ -6,9 +6,11 @@ public class CommandsRegister {
     public static void registerTscClientCommands() {
         ClientCommandManager.DISPATCHER.register(
             ClientCommandManager.literal("tsc")
-                .executes(context -> {
-                    return ClientCommands.getBirthday(context.getSource());
-            })
+                .then(ClientCommandManager.literal("birthday")
+                    .then(ClientCommandManager.literal("print")
+                        .executes(context -> {
+                            return ClientCommands.getBirthday(context.getSource());
+            })))
         );
     }
 }
