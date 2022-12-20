@@ -2,6 +2,7 @@ package com.soft_cafe;
 
 import com.soft_cafe.biome.BiomeMixinAccess;
 import com.soft_cafe.command.CommandsRegister;
+import com.soft_cafe.item.BirthCertificate;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.client.MinecraftClient;
@@ -37,7 +38,7 @@ public class TSC_Core implements ModInitializer {
 	private static boolean firstTimeSetupCheck = true;
 
 	// Items
-	public static final Item BIRTHDAY_CERTIFICATE = new Item(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1));
+	public static final BirthCertificate BIRTHDAY_CERTIFICATE = new BirthCertificate(new FabricItemSettings().group(ItemGroup.MISC).maxCount(1));
 
 
 	// Getters and setters
@@ -63,7 +64,7 @@ public class TSC_Core implements ModInitializer {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		LOGGER.info("Hello Fabric world!");
+		//LOGGER.info("Hello Fabric world!");
 
 		client = MinecraftClient.getInstance();
 		calendar = new Calendar();
@@ -83,7 +84,7 @@ public class TSC_Core implements ModInitializer {
 	public static String getHemisphere() {
 		String hemisphereString = "North/South: ";
 
-		// Check Z value for N/S hemisphere
+		// Check Z value for North/South hemisphere
 		if (client.player.getBlockPos().getZ() > 0) {
 			hemisphereString += "Northern";
 		} else if (client.player.getBlockPos().getZ() < 0) {
@@ -94,7 +95,7 @@ public class TSC_Core implements ModInitializer {
 
 		hemisphereString += "East/West: ";
 
-		// Check X value for E/W hemisphere
+		// Check X value for East/WestG hemisphere
 		if (client.player.getBlockPos().getX() > 0) {
 			hemisphereString += ", Eastern";
 		} else if (client.player.getBlockPos().getX() < 0) {

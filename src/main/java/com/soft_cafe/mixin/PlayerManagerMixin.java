@@ -27,9 +27,8 @@ abstract public class PlayerManagerMixin {
         TSC_Core.LOGGER.info("Player has spawned.");
         PlayerEntity playerAsEntity = (PlayerEntity) player;
 
-        // Get birthday data.
+        // Get birthday data
         localNbtCompound.putInt("BirthDayOfMonth", TSC_Core.getCalendar().getDay());
-
         localNbtCompound.putBoolean("hasSetBirthday", false);
 
         if (localNbtCompound != null) {

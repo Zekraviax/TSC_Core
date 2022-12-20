@@ -17,18 +17,6 @@ public abstract class BiomeMixin implements BiomeMixinAccess {
     @Unique
     private Float maxTemperature = 2.f;
 
-    /*
-    @Unique
-    private Map<Float, Float> summerOneTemperatureRanges = new HashMap<>();
-
-    @Unique
-    private Map<Float, Float> summerTwoTemperatureRanges =  new HashMap<>();
-
-    @Unique
-    private Map<Float, Float> summerThreeTemperatureRanges = new HashMap<>();
-    */
-
-
     // Interface methods
     @Override
     public Float getMinTemperature() {
@@ -53,7 +41,6 @@ public abstract class BiomeMixin implements BiomeMixinAccess {
     public void setBiomeName(String biomeName) {
         this.biomeName = biomeName;
     }
-
 
     @Override
     public void newMonth() {

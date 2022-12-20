@@ -5,10 +5,12 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "BiomeMixin",
+    "ClientPlayerEntityAccessor",
+    "ClientPlayerEntityMixin",
     "ClientWorldMixin",
-    "WorldRendererMixin",
+    "PlayerManagerMixin",
     "WorldRendererAccessor",
-    "PlayerManagerMixin"
+    "WorldRendererMixin"
   ],
   "client": [
     "DebugHudMixin"
