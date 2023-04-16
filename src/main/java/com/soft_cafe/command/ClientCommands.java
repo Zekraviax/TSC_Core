@@ -5,25 +5,16 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.soft_cafe.TSC_Core;
 import com.soft_cafe.biome.BiomeMixinAccess;
 import com.soft_cafe.gui.BirthdayCertificateScreen;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.BookEditScreen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
-import org.w3c.dom.Text;
-
-import java.awt.print.Book;
 
 public class ClientCommands {
     public static int printTemperature(CommandContext<ServerCommandSource> serverCommandSourceCommandContext) throws CommandSyntaxException {
@@ -32,7 +23,7 @@ public class ClientCommands {
         ServerCommandSource s = serverCommandSourceCommandContext.getSource();
         ServerWorld world = s.getWorld();
 
-        ServerPlayerEntity player = s.getPlayer();
+        ServerPlayerEntity player = s.getPlayerOrThrow();
         BlockPos pos = player.getBlockPos();
 
         RegistryEntry<Biome> entry = world.getBiome(pos);
@@ -63,8 +54,7 @@ public class ClientCommands {
     public static int getBirthday(FabricClientCommandSource source) throws CommandSyntaxException {
         NbtCompound nbtCompound = MinecraftClient.getInstance().getServer().getSaveProperties().getPlayerData();
 
-        //TSC_Core.LOGGER.info("Player Birthday: " + nbtCompound.getInt("BirthDayOfMonth"));
-        source.getPlayer().sendChatMessage("Player Birthday: " + nbtCompound.getInt("BirthDayOfMonth"));
+        source.getPlayer().sendMessage(Text.of("Player Birthday: " + nbtCompound.getInt("BirthDayOfMonth")));
 
         BirthdayCertificateScreen screen = new BirthdayCertificateScreen("test");
         MinecraftClient.getInstance().setScreen(screen);

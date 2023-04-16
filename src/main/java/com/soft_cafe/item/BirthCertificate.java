@@ -15,9 +15,11 @@ public class BirthCertificate extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
+
         // Should call the ClientPlayerEntity version of 'useBook'.
         user.useBook(itemStack, hand);
         //user.incrementStat(Stats.USED.getOrCreateStat(this));
+
         return TypedActionResult.success(itemStack, world.isClient());
     }
 }
