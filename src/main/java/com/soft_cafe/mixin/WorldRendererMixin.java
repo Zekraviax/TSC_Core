@@ -19,28 +19,24 @@ import net.minecraft.util.math.Vec3d;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
-    //private final boolean renderDefaultStars = false;
     private float sunSize = 30.f;
     private float moonSize = 5.f;
     private float starSize = 100.f;
 
-    private MatrixStack matricesRef;
-
     // Replace the Moon_Phases texture with our own various Moon textures
     private Identifier MOON_PHASE = new Identifier("atmosphere:textures/environment/moonphase_7.png");
     private Identifier SUN_TEXTURE = new Identifier("atmosphere:textures/environment/sun_smog.png");
-    private Identifier STARS_BOTTOM_TEXTURE = new Identifier("atmosphere:textures/down.png");
-    private Identifier STARS_TOP_TEXTURE = new Identifier("atmosphere:textures/up.png");
-    private Identifier STARS_FRONT_TEXTURE = new Identifier("atmosphere:textures/north.png");
-    private Identifier STARS_BACK_TEXTURE = new Identifier("atmosphere:textures/south.png");
-    private Identifier STARS_LEFT_TEXTURE = new Identifier("atmosphere:textures/west.png");
-    private Identifier STARS_RIGHT_TEXTURE = new Identifier("atmosphere:textures/east.png");
+    private Identifier STARS_BOTTOM_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_down.png");
+    private Identifier STARS_TOP_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_up.png");
+    private Identifier STARS_FRONT_TEXTURE = new Identifier("atmosphere:textures/environment/north.png");
+    private Identifier STARS_BACK_TEXTURE = new Identifier("atmosphere:textures/environment/south.png");
+    private Identifier STARS_LEFT_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_west.png");
+    private Identifier STARS_RIGHT_TEXTURE = new Identifier("atmosphere:textures/environment/zodiac_east.png");
     private Identifier TESTER_TEXTURE = new Identifier("atmosphere:textures/tester.png");
 
     // Access variables in WorldRenderer for our customRenderSky method
@@ -245,14 +241,14 @@ public abstract class WorldRendererMixin {
                     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                     RenderSystem.depthMask(true);
 
-                    customRenderStars(matrices);
+                    customRenderStars(matrices, tickDelta);
                 }
             }
         }
 
     }
 
-    private void customRenderStars(MatrixStack matrices) {
+    private void customRenderStars(MatrixStack matrices, float tickDelta) {
         RenderSystem.enableBlend();
         RenderSystem.depthMask(false);
         RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
@@ -260,37 +256,48 @@ public abstract class WorldRendererMixin {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(this.world.getSkyAngle(tickDelta) * 360.0f));
+        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(TSC_Core.getCalendar().getConstellationsAngle()));
+
         for(int i = 0; i < 6; ++i) {
             matrices.push();
 
             if (i == 0) {
                 RenderSystem.setShaderTexture(0, STARS_BOTTOM_TEXTURE);
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(270.0f));
             }
 
             if (i == 1) {
+                // West
                 RenderSystem.setShaderTexture(0, STARS_LEFT_TEXTURE);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0F));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0f));
             }
 
             if (i == 2) {
                 RenderSystem.setShaderTexture(0, STARS_RIGHT_TEXTURE);
+                // East
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-90.0F));
-                //matrices.translate(0.f, 0.f, 180.f);
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0f));
             }
 
             if (i == 3) {
                 RenderSystem.setShaderTexture(0, STARS_TOP_TEXTURE);
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180.0F));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0f));
             }
 
             if (i == 4) {
                 RenderSystem.setShaderTexture(0, STARS_FRONT_TEXTURE);
                 matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(90.0F));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-90.0f));
             }
 
             if (i == 5) {
                 RenderSystem.setShaderTexture(0, STARS_BACK_TEXTURE);
                 matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(-90.0F));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0f));
             }
 
             Matrix4f matrix4f = matrices.peek().getPositionMatrix();
