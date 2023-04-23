@@ -1,6 +1,5 @@
 package com.soft_cafe.mixin;
 
-import com.soft_cafe.PlayerEntityAccessor;
 import com.soft_cafe.TSC_Core;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -29,7 +28,7 @@ abstract public class PlayerManagerMixin {
 
         // Get birthday data
         localNbtCompound.putInt("BirthDayOfMonth", TSC_Core.getCalendar().getDay());
-        localNbtCompound.putBoolean("hasSetBirthday", false);
+        localNbtCompound.putBoolean("hasSetBirthday", true);
 
         if (localNbtCompound != null) {
             player.writeCustomDataToNbt(localNbtCompound);

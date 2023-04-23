@@ -6,8 +6,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -21,6 +19,11 @@ public class BirthdayCertificateScreen extends Screen {
     private int pageIndex = 0;
     private int cachedPageIndex = -1;
 
+    // Player birth date
+    public static int birthDay = 0;
+    public static int birthMonth = 0;
+    public static int birthYear = 0;
+
     public BirthdayCertificateScreen(String title) {
         super(Text.of(title));
     }
@@ -33,7 +36,6 @@ public class BirthdayCertificateScreen extends Screen {
         RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
 
         int XPositionOnScreen = (this.width - 192) / 2;
-        //int YPositionOnScreen = MinecraftClient.getInstance().getWindow().getHeight() / 2 - (this.height / 1.5);
         int YPositionOnScreen = MinecraftClient.getInstance().getWindow().getHeight() / 2 - this.height;
         this.drawTexture(matrices, XPositionOnScreen, YPositionOnScreen, 0, 0, 192, 192);
 
@@ -50,21 +52,17 @@ public class BirthdayCertificateScreen extends Screen {
         int TextRendererWidth = this.textRenderer.getWidth(this.pageIndexText);
         this.textRenderer.draw(matrices, this.pageIndexText, (float)(XPositionOnScreen - TextRendererWidth + 192 - 44), 18.0f, 0);
 
+
         // Draw the text in the cachedPage list.
-        //Text firstLine = Text.of("First line.");
-        //cachedPage.add(new LiteralText("First line.").asOrderedText());
-        cachedPage = client.textRenderer.wrapLines(Text.of("First Line"), 150);
+        cachedPage = client.textRenderer.wrapLines(Text.of("Birth Day: " + String.valueOf(birthDay) +
+                "\nBirth Month: " + String.valueOf(birthMonth) +
+                "\nBirth Year: " + String.valueOf(birthYear)), 150);
 
         int l = Math.min(128 / this.textRenderer.fontHeight, this.cachedPage.size());
         for (int m = 0; m < l; ++m) {
             OrderedText orderedText = this.cachedPage.get(m);
             this.textRenderer.draw(matrices, orderedText, (float)(XPositionOnScreen + 36), (float)(32 + m * this.textRenderer.fontHeight), 0);
         }
-
-//        Style style = this.getTextStyleAt(mouseX, mouseY);
-//        if (style != null) {
-//            this.renderTextHoverEffect(matrices, style, mouseX, mouseY);
-//        }
 
         super.render(matrices, mouseX, mouseY, delta);
     }

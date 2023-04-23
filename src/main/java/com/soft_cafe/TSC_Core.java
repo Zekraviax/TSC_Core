@@ -1,17 +1,21 @@
 package com.soft_cafe;
 
+import com.soft_cafe.gui.BirthdayCertificateScreen;
 import com.soft_cafe.item.BirthCertificate;
+import com.soft_cafe.server.PlayerState;
+import com.soft_cafe.server.ServerState;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.registry.BuiltinRegistries;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +40,9 @@ public class TSC_Core implements ModInitializer {
 
 	// Items
 	public static final BirthCertificate BIRTHDAY_CERTIFICATE = new BirthCertificate(new FabricItemSettings().maxCount(1));
+
+	// Packet Identifiers
+	public static final Identifier DATE_OF_BIRTH = new Identifier("tsc_core", "dateofbirth");
 
 
 	// Getters and setters
@@ -75,6 +82,30 @@ public class TSC_Core implements ModInitializer {
 
 		// Register items
 		Registry.register(Registries.ITEM, new Identifier(MODID, "birthday_certificate"), BIRTHDAY_CERTIFICATE);
+
+		// Pass the player their data
+		ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> {
+			ServerState serverState = ServerState.getServerState(handler.player.world.getServer());
+			PlayerState playerState = ServerState.getPlayerState(handler.player);
+
+			PacketByteBuf data = PacketByteBufs.create();
+
+			playerState.birthDayAsNumber = calendar.getDay();
+			playerState.birthMonthAsNumber = calendar.getDisplayMonth();
+			playerState.birthYear = calendar.getYear();
+
+			data.writeInt(playerState.birthDayAsNumber);
+			data.writeInt(playerState.birthMonthAsNumber);
+			data.writeInt(playerState.birthYear);
+
+			ServerPlayNetworking.send(handler.player, DATE_OF_BIRTH, data);
+		}));
+
+		ClientPlayNetworking.registerGlobalReceiver(DATE_OF_BIRTH, (client, handler, buf, responseSender) -> {
+			BirthdayCertificateScreen.birthDay = buf.readInt();
+			BirthdayCertificateScreen.birthMonth = buf.readInt();
+			BirthdayCertificateScreen.birthYear = buf.readInt();
+		});
 	}
 
 
