@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "tsc_core:block/bloodwood_window_top"
+  }
+}

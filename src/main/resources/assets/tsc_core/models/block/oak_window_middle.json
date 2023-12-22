@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_side",
+  "textures": {
+    "edge": "tsc_core:block/bloodwood_window_middle",
+    "pane": "tsc_core:block/bloodwood_window_middle"
+  }
+}

@@ -249,7 +249,7 @@ public class Calendar {
                     dayOfYear = 1;
                     displayYear++;
                     year++;
-                    TSC_Core.LOGGER.info("New year!");
+                    //TSC_Core.LOGGER.info("New year!");
                 }
                 break;
             default:

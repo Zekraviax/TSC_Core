@@ -256,8 +256,8 @@ public abstract class WorldRendererMixin {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
 
-        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(this.world.getSkyAngle(tickDelta) * 360.0f));
-        matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(TSC_Core.getCalendar().getConstellationsAngle()));
+        //matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(this.world.getSkyAngle(tickDelta) * 360.0f));
+        //matrices.multiply(RotationAxis.NEGATIVE_X.rotationDegrees(TSC_Core.getCalendar().getConstellationsAngle()));
 
         for(int i = 0; i < 6; ++i) {
             matrices.push();

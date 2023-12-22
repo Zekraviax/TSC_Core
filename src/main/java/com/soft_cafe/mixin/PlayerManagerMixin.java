@@ -23,7 +23,7 @@ abstract public class PlayerManagerMixin {
 
     @Inject(method = "onPlayerConnect", at = @At("TAIL"))
     void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
-        TSC_Core.LOGGER.info("Player has spawned.");
+        //TSC_Core.LOGGER.info("Player has spawned.");
         PlayerEntity playerAsEntity = (PlayerEntity) player;
 
         // Get birthday data
@@ -33,7 +33,7 @@ abstract public class PlayerManagerMixin {
         if (localNbtCompound != null) {
             player.writeCustomDataToNbt(localNbtCompound);
         } else {
-            TSC_Core.LOGGER.info("Error retrieving NbtCompound");
+            //TSC_Core.LOGGER.info("Error retrieving NbtCompound");
         }
     }
 }

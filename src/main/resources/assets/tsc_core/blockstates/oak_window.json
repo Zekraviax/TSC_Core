@@ -1,0 +1,42 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "tsc_core:block/oak_window_middle"
+      }
+    },
+    {
+      "apply": {
+        "model": "tsc_core:block/oak_window_middle"
+      },
+      "when": {
+        "up": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "tsc_core:block/oak_window_middle",
+        "y": 90
+      },
+      "when": {
+        "down": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "tsc_core:block/oak_window_middle"
+      },
+      "when": {
+        "up": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "tsc_core:block/oak_window_middle"
+      },
+      "when": {
+        "down": "false"
+      }
+    }
+  ]
+}

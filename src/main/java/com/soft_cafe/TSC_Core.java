@@ -5,19 +5,23 @@ import com.soft_cafe.item.BirthCertificate;
 import com.soft_cafe.server.PlayerState;
 import com.soft_cafe.server.ServerState;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Material;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.item.BlockItem;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -28,7 +32,7 @@ public class TSC_Core implements ModInitializer {
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
-	public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+	//public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
 	// Always accessible variables
 	private static Calendar calendar;
@@ -37,6 +41,9 @@ public class TSC_Core implements ModInitializer {
 	// New Month event listeners
 	private static Collection<Biome> listeners = new HashSet<>();
 	private static boolean firstTimeSetupCheck = true;
+
+	// Blocks
+	public static final WindowBlock OAK_WINDOW = new WindowBlock(AbstractBlock.Settings.of(Material.GLASS).strength(0.3F).sounds(BlockSoundGroup.GLASS).nonOpaque());
 
 	// Items
 	public static final BirthCertificate BIRTHDAY_CERTIFICATE = new BirthCertificate(new FabricItemSettings().maxCount(1));
@@ -49,7 +56,6 @@ public class TSC_Core implements ModInitializer {
 	public static Calendar getCalendar() {
 		return calendar;
 	}
-
 	public static void setCalendar(Calendar calendar) {
 		TSC_Core.calendar = calendar;
 	}
@@ -57,7 +63,6 @@ public class TSC_Core implements ModInitializer {
 	public static MinecraftClient getClient() {
 		return client;
 	}
-
 	public static void setClient(MinecraftClient client) {
 		TSC_Core.client = client;
 	}
@@ -80,8 +85,13 @@ public class TSC_Core implements ModInitializer {
 		// Register TSC commands
 		//CommandsRegister.registerTscClientCommands();
 
+		// Register blocks
+		Registry.register(Registries.BLOCK, new Identifier(MODID, "oak_window"), OAK_WINDOW);
+		BlockRenderLayerMap.INSTANCE.putBlock(OAK_WINDOW, RenderLayer.getTranslucent());
+
 		// Register items
 		Registry.register(Registries.ITEM, new Identifier(MODID, "birthday_certificate"), BIRTHDAY_CERTIFICATE);
+		Registry.register(Registries.ITEM, new Identifier(MODID,"oak_window"), new BlockItem(OAK_WINDOW, new FabricItemSettings()));
 
 		// Pass the player their data
 		ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) -> {
@@ -113,7 +123,7 @@ public class TSC_Core implements ModInitializer {
 		String hemisphereString = "North/South: ";
 
 		// Check Z value for North/South hemisphere
-		if (client.player.getBlockPos().getZ() > 0) {
+		/*if (client.player.getBlockPos().getZ() > 0) {
 			hemisphereString += "Northern";
 		} else if (client.player.getBlockPos().getZ() < 0) {
 			hemisphereString += "Southern";
@@ -130,7 +140,7 @@ public class TSC_Core implements ModInitializer {
 			hemisphereString += ", Western";
 		} else {
 			hemisphereString += ", Equator";
-		}
+		}*/
 
 		return hemisphereString;
 	}
